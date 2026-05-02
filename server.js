@@ -1,41 +1,47 @@
 const express = require("express");
-const fetch = require("node-fetch");
+const cors = require("cors");
 
 const app = express();
 
-const SERVER_KEY = "TU_SERVER_KEY_FIREBASE";
+app.use(cors());
+app.use(express.json());
 
-app.get("/enviar", async (req, res) => {
-  try {
-    const response = await fetch("https://duo-adonay-default-rtdb.firebaseio.com/tokens.json");
-    const data = await response.json();
-
-    const tokens = Object.values(data || {}).map(t => t.token);
-
-    for (let token of tokens) {
-      await fetch("https://fcm.googleapis.com/fcm/send", {
-        method: "POST",
-        headers: {
-          "Authorization": "key=" + SERVER_KEY,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          to: token,
-          notification: {
-            title: "🍔 Dúo Adonay",
-            body: "No te olvides de hacer tu pedido para mañana 🔥"
-          }
-        })
-      });
-    }
-
-    res.send("Notificaciones enviadas");
-  } catch (error) {
-    console.error(error);
-    res.send("Error");
-  }
+// 🔥 RUTA PRINCIPAL (evita el error "/")
+app.get("/", (req, res) => {
+  res.send("Servidor Dúo Adonay funcionando 🚀");
 });
 
-app.listen(3000, () => {
-  console.log("Servidor corriendo");
+// 💳 CREAR PAGO (SIMULADO / LISTO PARA MERCADO PAGO)
+app.post("/crear-pago", (req, res) => {
+  const { nombre, telefono, direccion, simple, completa, combo } = req.body;
+
+  const total =
+    (simple || 0) * 100 +
+    (completa || 0) * 150 +
+    (combo || 0) * 1550;
+
+  console.log("Pedido recibido:", {
+    nombre,
+    telefono,
+    direccion,
+    simple,
+    completa,
+    combo,
+    total
+  });
+
+  // 🔥 LINK DE PAGO (PUEDES REEMPLAZAR POR MERCADO PAGO REAL)
+  const fakePaymentLink = "https://www.mercadopago.com.uy/";
+
+  res.json({
+    init_point: fakePaymentLink,
+    mensaje: "Pago generado correctamente",
+    total
+  });
+});
+
+// 🔥 IMPORTANTE PARA RENDER
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Servidor corriendo en puerto " + PORT);
 });
