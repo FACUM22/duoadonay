@@ -1,14 +1,12 @@
 {
-  "name": "duoadonay",
+  "name": "duo-adonay",
   "version": "1.0.0",
-  "description": "Servidor de notificaciones y pagos Dúo Adonay",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "node-fetch": "^2.6.7",
-    "google-auth-library": "^9.0.0"
+    "cors": "^2.8.5"
   }
 }
